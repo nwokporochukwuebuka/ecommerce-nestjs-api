@@ -8,9 +8,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from 'db/data-source';
 import { UsersModule } from './users/users.module';
 import { CurrentUserMiddleware } from './utitlity/middlewares/current-user.middlewares';
+import { CategoriesModule } from './categories/categories.module';
+import { ProductsModule } from './products/products.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig), UsersModule],
+  imports: [TypeOrmModule.forRoot(typeOrmConfig), UsersModule, CategoriesModule, ProductsModule],
   controllers: [],
   providers: [],
 })

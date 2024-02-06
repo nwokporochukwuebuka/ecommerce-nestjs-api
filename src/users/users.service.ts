@@ -17,7 +17,7 @@ config();
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
-    private userRepo: Repository<UserEntity>,
+    private readonly userRepo: Repository<UserEntity>,
   ) {}
 
   async signUp(body: UserSignUpDto): Promise<UserEntity> {

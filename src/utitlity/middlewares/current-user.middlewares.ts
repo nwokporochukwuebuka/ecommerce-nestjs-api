@@ -36,7 +36,6 @@ export class CurrentUserMiddleware implements NestMiddleware {
         );
         const currentUser = await this.userService.findOne(+id);
         req.currentUser = currentUser;
-        console.log('====== I passed through the middleware =========');
         next();
       } catch (error) {
         req.currentUser = null;
