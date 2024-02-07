@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Roles } from 'src/utitlity/common/user-roles.enum';
 import { CategoryEntity } from 'src/categories/entities/category.entity';
+import { ProductEntity } from 'src/products/entities/product.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -33,6 +34,11 @@ export class UserEntity {
   @UpdateDateColumn()
   updatedAt: Timestamp;
 
+  // Relationships
+
   @OneToMany(() => CategoryEntity, (category) => category.addedBy)
   categories: CategoryEntity[];
+
+  @OneToMany(() => ProductEntity, (product) => product.addedBy)
+  products: ProductEntity[];
 }

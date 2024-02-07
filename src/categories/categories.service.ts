@@ -22,11 +22,15 @@ export class CategoriesService {
   }
 
   async findOne(id: number): Promise<CategoryEntity> {
-    return await this.categoryRepo.findOne({
+    const category = await this.categoryRepo.findOne({
       where: { id },
       relations: { addedBy: true },
       select: { addedBy: { id: true, name: true, email: true } },
     });
+
+    if (!category) throw new NotFoundException('Category Does Not Exists');
+
+    return category;
   }
 
   async findAll(): Promise<CategoryEntity[]> {

@@ -10,9 +10,10 @@ import { UsersModule } from './users/users.module';
 import { CurrentUserMiddleware } from './utitlity/middlewares/current-user.middlewares';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig), UsersModule, CategoriesModule, ProductsModule],
+  imports: [TypeOrmModule.forRoot(typeOrmConfig), UsersModule, CategoriesModule, ProductsModule, ReviewsModule],
   controllers: [],
   providers: [],
 })

@@ -14,7 +14,6 @@ import { UserEntity } from './entities/user.entity';
 import { UserSignInDto } from './dto/user-signin.dto';
 import { CurrentUser } from 'src/utitlity/decorators/current-user.decorator';
 import { AuthentcationGuard } from 'src/utitlity/guards/authentication.guards';
-// import { AuthorizeRoles } from 'src/utitlity/decorators/authorize-roles.decorators';
 import { Roles } from 'src/utitlity/common/user-roles.enum';
 import { AuthorizeGuard } from 'src/utitlity/guards/authorization.guards';
 
@@ -40,7 +39,6 @@ export class UsersController {
   }
 
   @HttpCode(HttpStatus.OK)
-  // @AuthorizeRoles(Roles.ADMIN)
   @UseGuards(AuthentcationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Get('all')
   findAll(): Promise<UserEntity[]> {
