@@ -6,6 +6,7 @@ import { ProductEntity } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import { CategoriesService } from 'src/categories/categories.service';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { OrderStatus } from 'src/orders/enums/order-status.enum';
 
 @Injectable()
 export class ProductsService {
@@ -44,10 +45,11 @@ export class ProductsService {
   async findOne(id: number): Promise<ProductEntity> {
     const product = await this.productRepo.findOne({
       where: { id: id },
-      relations: { addedBy: true, category: true },
+      relations: { addedBy: true, category: true, reviews: true },
       select: {
         addedBy: { id: true, name: true, email: true },
         category: { id: true, title: true },
+        reviews: { id: true, ratings: true, comment: true },
       },
     });
     if (!product) throw new NotFoundException('This Product Does Not Exist');
@@ -79,5 +81,18 @@ export class ProductsService {
 
   remove(id: number) {
     return `This action removes a #${id} product`;
+  }
+
+  async updateProductStock(id: number, stock: number, status: string) {
+    let product = await this.findOne(id);
+
+    if (status === OrderStatus.DELIVERED) {
+      product.stock -= stock;
+    } else if (status === OrderStatus.CANCELLED) {
+      product.stock += stock;
+    }
+
+    product = await this.productRepo.save(product);
+    return product;
   }
 }

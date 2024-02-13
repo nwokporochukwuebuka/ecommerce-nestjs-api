@@ -11,9 +11,17 @@ import { CurrentUserMiddleware } from './utitlity/middlewares/current-user.middl
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig), UsersModule, CategoriesModule, ProductsModule, ReviewsModule],
+  imports: [
+    TypeOrmModule.forRoot(typeOrmConfig),
+    UsersModule,
+    CategoriesModule,
+    ProductsModule,
+    ReviewsModule,
+    OrdersModule,
+  ],
   controllers: [],
   providers: [],
 })
