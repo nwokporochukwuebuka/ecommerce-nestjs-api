@@ -4,7 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderEntity } from './entities/order.entity';
 import { Repository } from 'typeorm';
@@ -75,7 +74,7 @@ export class OrdersService {
     return await this.findOne(orderTbl.id);
   }
 
-  async findAll() {
+  async findAll(): Promise<OrderEntity[]> {
     return await this.orderRepo.find({
       relations: {
         products: { product: true },
@@ -159,5 +158,22 @@ export class OrdersService {
 
   remove(id: number) {
     return `This action removes a #${id} order`;
+  }
+
+  async cancel(id: number, currentUser: UserEntity) {
+    let order = await this.findOne(id);
+
+    if (!order) throw new NotFoundException('Order Not Found');
+
+    if (order.status === OrderStatus.CANCELLED) return order;
+
+    order.updatedBy = currentUser;
+
+    order.status = OrderStatus.CANCELLED;
+
+    order = await this.orderRepo.save(order);
+
+    await this.stockUpdate(order, OrderStatus.CANCELLED);
+    return order;
   }
 }

@@ -9,6 +9,8 @@ import {
   HttpCode,
   HttpStatus,
   UseGuards,
+  Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -19,6 +21,7 @@ import { Roles } from 'src/utitlity/common/user-roles.enum';
 import { CurrentUser } from 'src/utitlity/decorators/current-user.decorator';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { ProductEntity } from './entities/product.entity';
+import { SerializeInterceptor } from 'src/utitlity/interceptors/serialize.interceptor';
 
 @Controller('products')
 export class ProductsController {
@@ -35,10 +38,10 @@ export class ProductsController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthentcationGuard)
+  @UseInterceptors(SerializeInterceptor)
   @Get()
-  findAll(): Promise<ProductEntity[]> {
-    return this.productsService.findAll();
+  findAll(@Query() query: any): Promise<any[]> {
+    return this.productsService.findAll(query);
   }
 
   @HttpCode(HttpStatus.OK)

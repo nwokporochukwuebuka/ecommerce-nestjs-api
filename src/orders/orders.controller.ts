@@ -7,6 +7,9 @@ import {
   Delete,
   UseGuards,
   Put,
+  HttpCode,
+  HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -23,6 +26,7 @@ import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
+  @HttpCode(HttpStatus.CREATED)
   @UseGuards(AuthentcationGuard)
   @Post()
   async create(
@@ -32,24 +36,37 @@ export class OrdersController {
     return this.ordersService.create(createOrderDto, user);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get()
   findAll(): Promise<OrderEntity[]> {
     return this.ordersService.findAll();
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.ordersService.findOne(+id);
   }
 
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthentcationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Put(':id')
   update(
     @Param('id') id: string,
     @Body() updateOrderStatusDto: UpdateOrderStatusDto,
     @CurrentUser() user: UserEntity,
-  ) {
+  ): Promise<OrderEntity> {
     return this.ordersService.update(+id, updateOrderStatusDto, user);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthentcationGuard, AuthorizeGuard([Roles.ADMIN]))
+  @Put('cancel/:id')
+  async cancelOrder(
+    @CurrentUser() user: UserEntity,
+    @Param('id') id: number,
+  ): Promise<OrderEntity> {
+    return await this.ordersService.cancel(+id, user);
   }
 
   @Delete(':id')

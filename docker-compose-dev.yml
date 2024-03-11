@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+
+  # db:
+  #   # container_name: "postgresdb"
+  #   image: postgres
+  #   environment:
+  #     - POSTGRES_PASSWORD=postgres
+  #     - POSTGRES_DB=nest-commerce
+  #     - POSTGRES_USER=postgres
+  #   restart: unless-stopped
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+  #   networks:
+  #     - backend
+  #   ports:
+  #     - 5432:5432
+
+  ecommerce-app:
+    container_name: nestjs-ecommerce-practice
+    image: nestjs-ecommerce-practice-image
+    build:
+      context: .
+      dockerfile: Dockerfile
+    init: true
+    volumes:
+      - type: bind
+        source: .
+        target: /usr/src/ecommerce-app
+      - type: volume
+        target: /usr/src/ecommerce-app/node_modules
+    # depends_on:
+    #   - db
+    env_file:
+      - ./.env
+    networks:
+      - backend
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+volumes:
+  pgdata:
+networks:
+  backend:
+    driver: bridge

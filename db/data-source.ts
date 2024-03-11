@@ -17,4 +17,6 @@ export const typeOrmConfig: DataSourceOptions = {
 
 const dataSource = new DataSource(typeOrmConfig);
 
+dataSource.initialize();
+
 export default dataSource;
